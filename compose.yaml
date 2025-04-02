@@ -1,0 +1,76 @@
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/base
+    ports:
+      - 0.0.0.0:5173:5173
+      - 0.0.0.0:8081:8081
+    command: "sleep infinity"
+    volumes:
+      - .:/workspaces
+  postgres:
+    image: postgres:17
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_DB: todo
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    ports:
+      - 0.0.0.0:5432:5432
+  keycloak:
+    # 本番環境で使用する場合には、ビルド済みの keycloak イメージを使うこと
+    # 本番は HTTPS 必須なので注意
+    # See: [Running Keycloak in a container - Keycloak](https://www.keycloak.org/server/containers)
+    image: quay.io/keycloak/keycloak:26.1
+    init: true
+    restart: always
+    environment:
+      KC_HEALTH_ENABLED: false
+      KC_METRICS_ENABLED: false
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: password
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: password
+    command: ["start-dev"]
+    ports:
+      - 0.0.0.0:8080:8080
+    depends_on:
+      - postgres
+  kc-healthcheck:
+    image: curlimages/curl
+    restart: "no"
+    command: "sleep infinity"
+    depends_on:
+      - keycloak
+    healthcheck:
+      test: curl --fail http://keycloak:8080
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+  kc-init:
+    image: mikoto2000/kcadm:26
+    init: true
+    restart: "no"
+    depends_on:
+      kc-healthcheck:
+        condition: service_healthy
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: password
+      REALM: myrealm
+      CLIENT_ID: client-id
+      CLIENT_SECRET: client-secret
+    volumes:
+      # 初期化スクリプト
+      - "./.devcontainer/script/kc-init/init.sh:/init.sh"
+    command:
+      - /init.sh
+volumes:
+  postgres_data:
+    driver: local
+

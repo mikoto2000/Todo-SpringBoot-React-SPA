@@ -1,0 +1,24 @@
+{
+  "name": "TODO App",
+  "dockerComposeFile": "../compose.yaml",
+  "service": "app",
+  "workspaceFolder": "/workspaces",
+  "mounts": [
+    {
+      "type": "bind",
+      "source": "${localEnv:HOME}/.m2",
+      "target": "/home/vscode/.m2"
+    },
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "21",
+      "installGradle": "false",
+      "installMaven": "true"
+    },
+    "ghcr.io/robbert229/devcontainer-features/postgresql-client:1": {
+      "version": "17"
+    }
+  }
+}
