@@ -40,6 +40,11 @@ function App() {
     title.value = "";
   };
 
+  const completeTodo = async (todo: Todo) => {
+    todo.done = !todo.done;
+    TodoService.completeTodo( auth.user?.access_token || "", todo);
+  }
+
   if (auth.isAuthenticated) {
 
     return (
@@ -54,7 +59,11 @@ function App() {
         <div>
           <ul>
             {
-              todos.map(e => <li key={e.id}>{e.id} : {e.title}</li>)
+              todos.map(e => (
+                <li key={e.id}>{e.id} : {e.title}
+                  {!e.done ? <button onClick={() => completeTodo(e)}>完了</button> : <></>}
+                </li>)
+              )
             }
           </ul>
         </div>

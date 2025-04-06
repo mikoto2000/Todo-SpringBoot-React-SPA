@@ -37,3 +37,17 @@ export const addTodo = async (accessToken: string, todo: TodoForAdd): Promise<To
 
   return dummyTodo;
 }
+
+export const completeTodo = async (accessToken: string, todo: Todo): Promise<void> => {
+  const result = await fetch(`http://localhost:8081/todos/${todo.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({...todo, done: true}),
+  })
+  if (!result.ok) {
+    throw new Error("Failed to fetch todos");
+  }
+}

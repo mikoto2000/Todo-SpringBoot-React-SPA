@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import dev.mikoto2000.study.todo.dto.Todo;
 
@@ -20,5 +21,8 @@ public interface TodoMapper {
   @Insert("INSERT INTO todo (email,title,done) VALUES (#{email},#{title},#{done})")
   @Options(useGeneratedKeys = true, keyProperty = "id")
   void addTodo(Todo todo);
+
+  @Update("UPDATE todo SET title = #{title}, done = #{done} WHERE id = #{id} AND email = #{email}")
+  void updateTodo(Todo todo);
 }
 
