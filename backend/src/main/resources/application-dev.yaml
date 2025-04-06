@@ -10,7 +10,7 @@ spring:
       resourceserver:
         jwt:
           # 認可サーバーのエンドポイントを設定
-          issuer-uri: http://keycloak:8080/realms/myoidc
+          issuer-uri: http://keycloak:8080/realms/myrealm
 
 server:
   port: 8081
