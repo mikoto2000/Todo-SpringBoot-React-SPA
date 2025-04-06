@@ -1,8 +1,8 @@
 import { Todo } from "../model/Todo";
 import { TodoForAdd } from "../model/TodoForAdd";
 
-export const getTodo = async (accessToken: string): Promise<Todo[]> => {
-  const result = await fetch("http://localhost:8081/todos", {
+export const getTodo = async (accessToken: string, size: number = 10, page: number = 0): Promise<Todo[]> => {
+  const result = await fetch(`http://localhost:8081/todos?size=${size}&page=${page}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

@@ -4,10 +4,14 @@ import { Todo } from './model/Todo';
 import * as TodoService from './service/TodoService';
 import { useAuth } from 'react-oidc-context';
 import { TodoForAdd } from './model/TodoForAdd';
+import { useSearchParams } from 'react-router';
 
 function App() {
 
   const auth = useAuth();
+  const [searchParams] = useSearchParams();
+  const size = searchParams.get('size') ? parseInt(searchParams.get('size') as string) : 10;
+  const page = searchParams.get('page') ? parseInt(searchParams.get('page') as string) : 0;
 
   const [todos, setTodos] = useState<Todo[]>([]);
 
@@ -15,10 +19,10 @@ function App() {
     if (auth.isAuthenticated) {
       getTodos();
     }
-  }, [auth]);
+  }, [auth, size, page]);
 
   const getTodos = async () => {
-    const newTodos = await TodoService.getTodo(auth.user?.access_token || "");
+    const newTodos = await TodoService.getTodo(auth.user?.access_token || "", size, page);
     setTodos(newTodos);
   }
 

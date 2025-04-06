@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { AuthProvider } from 'react-oidc-context';
+import { BrowserRouter } from 'react-router';
 
 const oidcConfig = {
   authority: 'http://keycloak:8080/realms/myrealm',
@@ -25,7 +26,9 @@ const oidcConfig = {
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider {...oidcConfig}>
+      <BrowserRouter>
       <App />
+      </BrowserRouter>
     </AuthProvider>
   </StrictMode>,
 )
