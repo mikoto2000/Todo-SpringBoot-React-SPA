@@ -4,11 +4,12 @@ import { Todo } from './model/Todo';
 import * as TodoService from './service/TodoService';
 import { useAuth } from 'react-oidc-context';
 import { TodoForAdd } from './model/TodoForAdd';
-import { useSearchParams } from 'react-router';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
 function App() {
 
   const auth = useAuth();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const size = searchParams.get('size') ? parseInt(searchParams.get('size') as string) : 10;
   const page = searchParams.get('page') ? parseInt(searchParams.get('page') as string) : 0;
@@ -72,7 +73,10 @@ function App() {
           <ul>
             {
               todos.map(e => (
-                <li key={e.id}>{e.id} : {e.title}
+                <li key={e.id}>
+                  <span className={e.done ? "completed" : ""}>
+                    {e.id} : {e.title}
+                  </span>
                   {!e.done ? <button onClick={() => toggleTodo(e)}>完了</button> :
                     <button onClick={() => toggleTodo(e)}>未完了に戻す</button>}
                   <button onClick={() => removeTodo(e)}>削除</button>
@@ -80,6 +84,17 @@ function App() {
               )
             }
           </ul>
+          <div className="pagination">
+            <button onClick={() => {
+              const newPage = page > 0 ? page - 1 : 0;
+              navigate(`?page=${newPage}&size=${size}`);
+            }}>前へ</button>
+            <span>ページ {page + 1}</span>
+            <button onClick={() => {
+              const newPage = page + 1;
+              navigate(`?page=${newPage}&size=${size}`);
+            }}>次へ</button>
+          </div>
         </div>
       </>
     )
