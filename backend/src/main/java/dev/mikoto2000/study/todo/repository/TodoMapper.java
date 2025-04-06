@@ -2,6 +2,7 @@ package dev.mikoto2000.study.todo.repository;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
@@ -24,5 +25,8 @@ public interface TodoMapper {
 
   @Update("UPDATE todo SET title = #{title}, done = #{done} WHERE id = #{id} AND email = #{email}")
   void updateTodo(Todo todo);
+
+  @Delete("DELETE FROM todo WHERE id = #{id} AND email = #{email}")
+  void deleteTodoByIdAndEmail(Long id, String email);
 }
 

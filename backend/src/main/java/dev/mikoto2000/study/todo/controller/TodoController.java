@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,5 +57,13 @@ public class TodoController {
 
     todo.setEmail(jwt.getClaimAsString("email"));
     todoMapper.updateTodo(todo);
+  }
+
+  @DeleteMapping("/todos/{id}")
+  public void deleteTodo(
+      @AuthenticationPrincipal Jwt jwt,
+      @PathVariable Long id) {
+
+    todoMapper.deleteTodoByIdAndEmail(id, jwt.getClaimAsString("email"));
   }
 }

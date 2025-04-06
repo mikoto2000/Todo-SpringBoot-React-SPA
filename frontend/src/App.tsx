@@ -47,6 +47,12 @@ function App() {
     setTodos([...todos]);
   }
 
+  const removeTodo = async (todo: Todo) => {
+    await TodoService.deleteTodo(auth.user?.access_token || "", todo.id);
+    // UIからTodoを削除
+    setTodos(todos.filter(t => t.id !== todo.id));
+  }
+
   if (auth.isAuthenticated) {
 
     return (
@@ -65,6 +71,7 @@ function App() {
                 <li key={e.id}>{e.id} : {e.title}
                   {!e.done ? <button onClick={() => toggleTodo(e)}>完了</button> :
                     <button onClick={() => toggleTodo(e)}>未完了に戻す</button>}
+                  <button onClick={() => removeTodo(e)}>削除</button>
                 </li>)
               )
             }

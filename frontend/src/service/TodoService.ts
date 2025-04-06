@@ -51,3 +51,16 @@ export const completeTodo = async (accessToken: string, todo: Todo): Promise<voi
     throw new Error("Failed to update todo");
   }
 }
+
+export const deleteTodo = async (accessToken: string, todoId: number): Promise<void> => {
+  const result = await fetch(`http://localhost:8081/todos/${todoId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+  if (!result.ok) {
+    throw new Error("Failed to delete todo");
+  }
+}
