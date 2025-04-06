@@ -7,8 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
@@ -28,13 +26,17 @@ public class SecurityConfiguration {
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
         .authorizeHttpRequests(authorize -> authorize
-            // 全てのアクセスに対して認証を要求する
             .anyRequest().authenticated())
         // セッションをステートレスモードにする
         // ステートレスな Web API として実装するならステートはいらない
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         // SPA の CSRF 対策として、クッキーに CSRF トークンを保存し、 JS から読めるようにしておく
-        .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()));
+        .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+        // CORS の設定を追加
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        // リソースサーバーで、 JWT を使用する
+        .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt
+            .jwtAuthenticationConverter(jwtAuthenticationConverter())));
 
     return http.build();
   }
