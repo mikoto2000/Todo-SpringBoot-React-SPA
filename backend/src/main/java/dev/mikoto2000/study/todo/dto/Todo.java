@@ -10,6 +10,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class Todo {
   private Long id;
+  private String email;
   private String title;
   private boolean done;
 }

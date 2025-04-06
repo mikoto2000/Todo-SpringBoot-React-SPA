@@ -3,9 +3,10 @@ package dev.mikoto2000.study.todo.controller;
 import java.util.List;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.mikoto2000.study.todo.dto.Todo;
@@ -25,5 +26,16 @@ public class TodoController {
   public List<Todo> getTodos(
       @AuthenticationPrincipal Jwt jwt) {
     return todoMapper.findAllByEmail(jwt.getClaimAsString("email"));
+  }
+
+  @PostMapping("/todos")
+  public Todo addTodo(
+      @AuthenticationPrincipal Jwt jwt,
+      @RequestBody Todo todo) {
+
+    todo.setEmail(jwt.getClaimAsString("email"));
+    todoMapper.addTodo(todo);
+
+    return todo;
   }
 }

@@ -3,6 +3,7 @@ import './App.css'
 import { Todo } from './model/Todo';
 import * as TodoService from './service/TodoService';
 import { useAuth } from 'react-oidc-context';
+import { TodoForAdd } from './model/TodoForAdd';
 
 function App() {
 
@@ -12,12 +13,32 @@ function App() {
 
   useEffect(() => {
     if (auth.isAuthenticated) {
-      (async () => {
-        const newTodos = await TodoService.getTodo(auth.user?.access_token || "");
-        setTodos(newTodos);
-      })();
+      getTodos();
     }
   }, [auth]);
+
+  const getTodos = async () => {
+    const newTodos = await TodoService.getTodo(auth.user?.access_token || "");
+    setTodos(newTodos);
+  }
+
+  const addTodo = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const title = form.elements.namedItem("title") as HTMLInputElement;
+    const todo: TodoForAdd = {
+      title: title.value,
+      done: false
+    }
+
+    const generatedTodo = await TodoService.addTodo(auth.user?.access_token || "", todo);
+
+    // Todo 更新
+    setTodos([generatedTodo, ...todos]);
+
+    // title 消去
+    title.value = "";
+  };
 
   if (auth.isAuthenticated) {
 
@@ -25,10 +46,10 @@ function App() {
       <>
         <h1>Todo SPA Application</h1>
         <h2>Add Task</h2>
-        <div>
-          <input type="text"></input>
+        <form onSubmit={addTodo}>
+          <input type="text" name="title"></input>
           <input type="submit" value="Send"></input>
-        </div>
+        </form>
         <h2>Todos</h2>
         <div>
           <ul>
