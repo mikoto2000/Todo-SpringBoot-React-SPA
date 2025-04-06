@@ -12,6 +12,6 @@ import dev.mikoto2000.study.todo.dto.Todo;
  */
 @Mapper
 public interface TodoMapper {
-  @Select("SELECT id,title,done FROM todo")
-  List<Todo> findAll();
+  @Select("SELECT id,title,done FROM todo WHERE email = #{email}")
+  List<Todo> findAllByEmail(String email);
 }
