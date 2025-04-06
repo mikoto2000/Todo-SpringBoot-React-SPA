@@ -7,6 +7,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.mikoto2000.study.todo.dto.Todo;
@@ -24,8 +25,14 @@ public class TodoController {
 
   @GetMapping("/todos")
   public List<Todo> getTodos(
-      @AuthenticationPrincipal Jwt jwt) {
-    return todoMapper.findAllByEmail(jwt.getClaimAsString("email"));
+      @AuthenticationPrincipal Jwt jwt,
+      @RequestParam(defaultValue = "20") int size,
+      @RequestParam(defaultValue = "0") int page) {
+
+    int offset = size * page;
+    int limit = size;
+
+    return todoMapper.findAllByEmail(jwt.getClaimAsString("email"), offset, limit);
   }
 
   @PostMapping("/todos")
