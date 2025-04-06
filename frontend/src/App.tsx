@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import './App.css'
+import { Todo } from './model/Todo';
 
 function App() {
 
-  const dummyTodo = [
+  const dummyTodo: Todo[] = [
     {
       id: 1,
       title: "Todo1",
@@ -21,7 +22,7 @@ function App() {
     },
   ];
 
-  const [todos, setTodos] = useState(dummyTodo);
+  const [todos, setTodos] = useState<Todo[]>(dummyTodo);
 
   return (
     <>
