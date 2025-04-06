@@ -1,0 +1,16 @@
+# 本番環境設定
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/todo
+    username: ${DB_USERNAME:admin}
+    password: ${DB_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # 認可サーバーのエンドポイントを設定
+          issuer-uri: http://keycloak:8080/realms/myoidc
+
+server:
+  port: 8081
