@@ -12,6 +12,14 @@ const oidcConfig = {
   post_logout_redirect_uri: 'http://localhost:5173/',
   scope: 'openid profile',
   response_type: 'code',
+  onSigninCallback: () => {
+    // クエリパラメータに色々な情報が載っているので、それを削除する
+    window.history.replaceState(
+      {},
+      document.title,
+      window.location.pathname
+    );
+  }
 };
 
 createRoot(document.getElementById('root')!).render(
