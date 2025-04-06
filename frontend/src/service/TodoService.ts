@@ -45,9 +45,9 @@ export const completeTodo = async (accessToken: string, todo: Todo): Promise<voi
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     },
-    body: JSON.stringify({...todo, done: true}),
+    body: JSON.stringify(todo),
   })
   if (!result.ok) {
-    throw new Error("Failed to fetch todos");
+    throw new Error("Failed to update todo");
   }
 }

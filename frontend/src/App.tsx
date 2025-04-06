@@ -40,9 +40,11 @@ function App() {
     title.value = "";
   };
 
-  const completeTodo = async (todo: Todo) => {
+  const toggleTodo = async (todo: Todo) => {
     todo.done = !todo.done;
-    TodoService.completeTodo( auth.user?.access_token || "", todo);
+    await TodoService.completeTodo(auth.user?.access_token || "", todo);
+    // UI上のTodoリストを更新
+    setTodos([...todos]);
   }
 
   if (auth.isAuthenticated) {
@@ -61,7 +63,8 @@ function App() {
             {
               todos.map(e => (
                 <li key={e.id}>{e.id} : {e.title}
-                  {!e.done ? <button onClick={() => completeTodo(e)}>完了</button> : <></>}
+                  {!e.done ? <button onClick={() => toggleTodo(e)}>完了</button> :
+                    <button onClick={() => toggleTodo(e)}>未完了に戻す</button>}
                 </li>)
               )
             }
