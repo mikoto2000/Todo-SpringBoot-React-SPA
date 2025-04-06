@@ -1,33 +1,44 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const dummyTodo = [
+    {
+      id: 1,
+      title: "Todo1",
+      done: false,
+    },
+    {
+      id: 2,
+      title: "Todo2",
+      done: true,
+    },
+    {
+      id: 3,
+      title: "Todo3",
+      done: true,
+    },
+  ];
+
+  const [todos, setTodos] = useState(dummyTodo);
 
   return (
     <>
+      <h1>Todo SPA Application</h1>
+      <h2>Add Task</h2>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <input type="text"></input>
+        <input type="submit" value="Send"></input>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <h2>Todos</h2>
+      <div>
+      <ul>
+        {
+          todos.map(e => <li key="{e.id}">{e.id} : {e.title}</li>)
+        }
+      </ul>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
