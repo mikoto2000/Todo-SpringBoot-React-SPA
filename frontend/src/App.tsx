@@ -15,7 +15,7 @@ function App() {
       const newTodos = TodoService.getTodo();
       setTodos(newTodos);
     }
-  });
+  }, [auth]);
 
   if (auth.isAuthenticated) {
 
@@ -31,7 +31,7 @@ function App() {
         <div>
           <ul>
             {
-              todos.map(e => <li key="{e.id}">{e.id} : {e.title}</li>)
+              todos.map(e => <li key={e.id}>{e.id} : {e.title}</li>)
             }
           </ul>
         </div>
