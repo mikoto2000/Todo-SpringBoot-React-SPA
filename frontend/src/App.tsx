@@ -12,8 +12,10 @@ function App() {
 
   useEffect(() => {
     if (auth.isAuthenticated) {
-      const newTodos = TodoService.getTodo();
-      setTodos(newTodos);
+      (async () => {
+        const newTodos = await TodoService.getTodo(auth.user?.access_token || "");
+        setTodos(newTodos);
+      })();
     }
   }, [auth]);
 

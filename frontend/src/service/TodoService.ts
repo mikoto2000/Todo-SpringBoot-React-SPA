@@ -1,23 +1,19 @@
 import { Todo } from "../model/Todo";
 
-export const getTodo = (): Todo[] => {
-  const dummyTodo: Todo[] = [
-    {
-      id: 1,
-      title: "Todo1",
-      done: false,
+export const getTodo = async (accessToken: string): Promise<Todo[]> => {
+  const result = await fetch("http://localhost:8081/todos", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
     },
-    {
-      id: 2,
-      title: "Todo2",
-      done: true,
-    },
-    {
-      id: 3,
-      title: "Todo3",
-      done: true,
-    },
-  ];
+  })
+
+  if (!result.ok) {
+    throw new Error("Failed to fetch todos");
+  }
+
+  const dummyTodo: Todo[] = await result.json();
 
   return dummyTodo;
 }
