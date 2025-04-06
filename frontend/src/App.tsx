@@ -1,28 +1,16 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import { Todo } from './model/Todo';
+import * as TodoService from './service/TodoService';
 
 function App() {
 
-  const dummyTodo: Todo[] = [
-    {
-      id: 1,
-      title: "Todo1",
-      done: false,
-    },
-    {
-      id: 2,
-      title: "Todo2",
-      done: true,
-    },
-    {
-      id: 3,
-      title: "Todo3",
-      done: true,
-    },
-  ];
+  const [todos, setTodos] = useState<Todo[]>([]);
 
-  const [todos, setTodos] = useState<Todo[]>(dummyTodo);
+  useEffect(() => {
+    const newTodos = TodoService.getTodo();
+    setTodos(newTodos);
+  });
 
   return (
     <>
